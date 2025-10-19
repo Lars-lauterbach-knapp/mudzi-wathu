@@ -1,5 +1,5 @@
 // components/ProtectedRoute.jsx
-import { useAuth } from '../hooks/useAuth';
+import {useAuth} from "../providers/AuthProvider.jsx";
 import { Navigate } from 'react-router-dom';
 
 function ProtectedRoute({ children }) {

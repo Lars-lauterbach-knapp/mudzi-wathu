@@ -1,39 +1,114 @@
-import React from 'react';
+import React, {useState} from 'react';
+import geldBackground from '../src/assets/geld.jpg'
+import {useAuth} from "./providers/AuthProvider.jsx";
+import {Link} from "react-router-dom";
 
 function LandingPage() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleGoogleLogin = () => {
-        // Redirect to Google OAuth2 endpoint
-        window.location.href = 'http://localhost:8081/oauth2/authorization/google';
-    }
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const { login } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            const result = await login(email, password);
+
+            if (!result.success) {
+                setError(result.message);
+            }
+            // No need to redirect here - it's handled in the AuthProvider login function
+        } catch (error) {
+            setError(error.message || 'An unexpected error occurred. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
         return (
-        <>
-            <section
-                className="min-h-screen bg-center bg-no-repeat bg-cover bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-gray-700 bg-blend-multiply flex items-center">
-                <div className="px-4 mx-auto max-w-screen-xl text-center w-full">
-                    <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
-                        We invest in the world's potential
-                    </h1>
-                    <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">
-                        Here at Flowbite we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth.
-                    </p>
-                    <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
-                        <button
-                            onClick={handleGoogleLogin}
-                           className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 transition-colors duration-200">
-                            Get started
-                            <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                      strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                            </svg>
-                        </button>
+            <>
+                <section className="bg-cover bg-center bg-no-repeat"
+                         style={{ backgroundImage: `url(${geldBackground})` }}>
+                    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+                        <a href="#"
+                           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                            Mudzi Wathu
+                        </a>
+                        <div
+                            className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                    Sign in to your account
+                                </h1>
+                                {error && (
+                                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                        <span className="block sm:inline">{error}</span>
+                                    </div>
+                                )}
+
+                                <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                                    <div>
+                                        <label htmlFor="email"
+                                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                                            email</label>
+                                        <input type="email"
+                                               name="email"
+                                               id="email"
+                                               value={email}
+                                               onChange={(e) => setEmail(e.target.value)}
+                                               className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                               placeholder="name@company.com" required=""/>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="password"
+                                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                        <input type="password"
+                                               name="password"
+                                               id="password"
+                                               placeholder="••••••••"
+                                               value={password}
+                                               onChange={(e) => setPassword(e.target.value)}
+                                               className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                               required=""/>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-start">
+                                            <div className="flex items-center h-5">
+                                                <input id="remember" aria-describedby="remember" type="checkbox"
+                                                       className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                                       required=""/>
+                                            </div>
+                                            <div className="ml-3 text-sm">
+                                                <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember
+                                                    me</label>
+                                            </div>
+                                        </div>
+                                        <a href="#"
+                                           className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot
+                                            password?</a>
+                                    </div>
+                                    <button type="submit"
+                                            className="w-full text-white bg-blue-800 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                        {loading ? 'Signing in...' : 'Sign in'}
+                                    </button>
+                                    <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                        Don’t have an account yet? <Link to="/register"
+                                                                      className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign
+                                        up</Link>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </>
-    );
+                </section>
+            </>
+        );
 }
 
 export default LandingPage;

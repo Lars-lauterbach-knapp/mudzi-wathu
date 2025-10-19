@@ -1,9 +1,8 @@
 import React from 'react';
 import {useAuth} from "../providers/AuthProvider.jsx";
 
-function Home() {
+function AdminHome() {
     const { user } = useAuth();
-
     if (!user) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -25,8 +24,8 @@ function Home() {
                     </h2>
                 </div>
             </div>
-                </>
+        </>
     );
 }
 
-                export default Home;
+export default AdminHome;

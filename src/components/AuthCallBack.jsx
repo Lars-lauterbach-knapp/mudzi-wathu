@@ -1,7 +1,7 @@
 // pages/AuthCallback.jsx
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import {useAuth} from "../providers/AuthProvider.jsx";
 
 function AuthCallback() {
     const { checkAuthStatus } = useAuth();
